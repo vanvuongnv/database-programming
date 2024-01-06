@@ -64,7 +64,23 @@ GO
 SET IDENTITY_INSERT Suppliers OFF
 GO
 --shippers
+SET IDENTITY_INSERT Shippers ON 
+GO
 
+INSERT INTO Shippers (
+    ShipperId,
+    CompanyName,
+    Phone)
+VALUES 
+(1, N'A.P. Moller-Maersk Group', '(620) 454-1799'),
+(2, N'Mediterranean Shipping Company (MSC)', '(266) 855-0710'),
+(3, N'CMA CGM Group', '(995) 565-4039'),
+(4, N'COSCO Shipping', '(711) 265-9193'),
+(5, N'Hapag-Lloyd', '(966) 291-5045'),
+GO
+
+SET IDENTITY_INSERT Shippers OFF
+GO
 --products
 
 --orders
