@@ -132,3 +132,22 @@ GO
 SET IDENTITY_INSERT Orders OFF
 GO
 --order details
+INSERT INTO OrderDetails(
+    OrderId,
+    ProductId,
+    Quantity,
+    UnitPrice,
+    DiscountPercentage
+)
+VALUES
+(1, 1, 1, 1000, 10),
+(1, 2, 2, 800, 5),
+(2, 3, 1, 700, 15),
+(2, 4, 2, 500, 20),
+(3, 5, 3, 200, 0),
+(3, 6, 4, 100, 5),
+(4, 7, 2, 300, 10),
+(4, 8, 3, 400, 15),
+(5, 9, 4, 500, 30),
+(5, 10, 5, 600, 40)
+GO
