@@ -82,7 +82,33 @@ GO
 SET IDENTITY_INSERT Shippers OFF
 GO
 --products
+SET IDENTITY_INSERT Products ON
+GO
 
+INSERT INTO Products(
+    ProductId,
+    ProductName,
+    CategoryId,
+    SupplierId,
+    QuantityPerUnit,
+    UnitPrice,
+    UnitsInStock
+)
+VALUES
+(1, N'iPhone 15 Pro 256GB', 1, 1, 1, 1100, 50),
+(2, N'iPhone 15 Pro', 2, 2, 1, 100, 20),
+(3, N'Xiaomi Redmi 13C', 3, 3, 1, 100, 70),
+(4, N'Laptop HP 15s fq5229TU i3 1215U/8GB/512GB/Win11 (8U237PA)', 4, 4, 1, 1200, 0),
+(5, N'Laptop Asus Vivobook X415EA i3 1115G4/8GB/256GB/Win11 (EK2034W)', 1, 5, 1, 2000, 5),
+(6, N'Điện thoại Samsung Galaxy A15 128GB', 2, 1, 1, 350, 90),
+(7, N'LG Inverter 217 lít GV-B212WB', 3, 2, 1, 600, 3),
+(8, N'Bếp từ đôi lắp âm Sunhouse Mama MMB9301', 4, 3, 1, 250, 5),
+(9, N'Nồi chiên không dầu Rapido RAF-8.0M 8 lít', 1, 4, 1, 200, 15),
+(10, N'LG Smart TV 55UQ8000PSC', 2, 5, 1, 500, 3)
+GO
+
+SET IDENTITY_INSERT Products OFF
+GO
 --orders
 
 --order details
