@@ -7,6 +7,8 @@ namespace Ordering.API.Services;
 public interface IDatabaseService
 {
     List<CategoryDto> GetCategories();
+    List<ProductDto> GetProducts();
+    ProductDto? GetProductById(int productId);
 }
 
 public class DatabaseService : IDatabaseService
@@ -27,6 +29,31 @@ public class DatabaseService : IDatabaseService
         using var connection = GetConnection();
 
         return connection.Query<CategoryDto>(sql).ToList();
+    }
+
+    public ProductDto? GetProductById(int productId)
+    {
+        string sql = """
+            SELECT p.*, c.CategoryName, s.CompanyName AS SupplierName
+            FROM Products p Join Categories c ON p.CategoryId = c.CategoryId
+            JOIN Suppliers s ON p.SupplierId = s.SupplierId
+            WHERE p.ProductId = @productId
+            """;
+        using var connection = GetConnection();
+
+        return connection.Query<ProductDto>(sql, new { productId }).FirstOrDefault();
+    }
+
+    public List<ProductDto> GetProducts()
+    {
+        string sql = """
+            SELECT p.*, c.CategoryName, s.CompanyName AS SupplierName
+            FROM Products p Join Categories c ON p.CategoryId = c.CategoryId
+            JOIN Suppliers s ON p.SupplierId = s.SupplierId
+            """;
+        using var connection = GetConnection();
+
+        return connection.Query<ProductDto>(sql).ToList();
     }
 
     private SqlConnection GetConnection()

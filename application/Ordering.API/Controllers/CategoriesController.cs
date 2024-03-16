@@ -27,6 +27,29 @@ namespace Ordering.API.Controllers
 
             return Ok(items);
         }
+
+        [HttpGet]
+        [Route("get-products")]
+        public IActionResult GetProducts()
+        {
+            var items = _databaseService.GetProducts();
+
+            return Ok(items);
+        }
+
+        [HttpGet]
+        [Route("get-products/{productId}")]
+        public IActionResult GetProducts(int productId)
+        {
+            var item = _databaseService.GetProductById(productId);
+
+            if (item is null)
+            {
+                return NotFound();
+            }    
+
+            return Ok(item);
+        }
     }
 }
 
