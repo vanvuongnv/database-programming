@@ -1,6 +1,7 @@
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Ordering.API.Models.Dtos;
+using Ordering.API.Models.RequestModels;
 
 namespace Ordering.API.Services;
 
@@ -10,6 +11,8 @@ public interface IDatabaseService
     List<ProductDto> GetProducts();
     ProductDto? GetProductById(int productId);
     List<ProductDto> GetProducts(int categoryId);
+
+    int Add(CategoryRequestModel requestModel);
 }
 
 public class DatabaseService : IDatabaseService
@@ -18,6 +21,28 @@ public class DatabaseService : IDatabaseService
     public DatabaseService(string connectionString)
     {
         _connectionString = connectionString;
+    }
+
+    public int Add(CategoryRequestModel requestModel)
+    {
+        string sql = """
+            INSERT INTO Categories(
+                CategoryName,
+                Description,
+                PictureUrl)
+            VALUES (@name, @description, @pictureUrl)
+            """;
+
+        using var connection = GetConnection();
+
+        var result = connection.Execute(sql, new
+        {
+            name = requestModel.CategoryName,
+            description = requestModel.Description,
+            pictureUrl = requestModel.PictureUrl
+        });
+
+        return result;
     }
 
     public List<CategoryDto> GetCategories()

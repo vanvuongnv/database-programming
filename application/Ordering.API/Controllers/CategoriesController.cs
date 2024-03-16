@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Ordering.API.Models.RequestModels;
 using Ordering.API.Services;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -59,6 +60,23 @@ namespace Ordering.API.Controllers
             var items = _databaseService.GetProducts(categoryId);
 
             return Ok(items);
+        }
+
+        [HttpPost]
+        [Route("add-category")]
+        public IActionResult InsertCategory([FromBody] CategoryRequestModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = _databaseService.Add(model);
+
+                if (result > 0)
+                {
+                    return Ok(new { msg = "insert successful"});
+                }    
+            }
+
+            return BadRequest(ModelState);
         }
     }
 }
