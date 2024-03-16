@@ -83,6 +83,13 @@ namespace Ordering.API.Controllers
         [Route("update-category/{id}")]
         public IActionResult UpdateCategory(int id, [FromBody] CategoryRequestModel model)
         {
+            var category = _databaseService.GetCategoryById(id);
+
+            if (category is null)
+            {
+                return NotFound();
+            }    
+
             if (ModelState.IsValid)
             {
                 var result = _databaseService.Update(id, model);

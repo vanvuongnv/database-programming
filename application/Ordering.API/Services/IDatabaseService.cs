@@ -15,6 +15,7 @@ public interface IDatabaseService
     int Add(CategoryRequestModel requestModel);
 
     int Update(int categoryId, CategoryRequestModel requestModel);
+    CategoryDto? GetCategoryById(int categoryId);
 }
 
 public class DatabaseService : IDatabaseService
@@ -57,6 +58,18 @@ public class DatabaseService : IDatabaseService
         using var connection = GetConnection();
 
         return connection.Query<CategoryDto>(sql).ToList();
+    }
+
+    public CategoryDto? GetCategoryById(int categoryId)
+    {
+        string sql = """
+            SELECT *
+            FROM Categories
+            WHERE CategoryId = @categoryId
+            """;
+        using var connection = GetConnection();
+
+        return connection.Query<CategoryDto>(sql, new { categoryId }).FirstOrDefault();
     }
 
     public ProductDto? GetProductById(int productId)
