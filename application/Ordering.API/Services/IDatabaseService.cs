@@ -9,6 +9,7 @@ public interface IDatabaseService
     List<CategoryDto> GetCategories();
     List<ProductDto> GetProducts();
     ProductDto? GetProductById(int productId);
+    List<ProductDto> GetProducts(int categoryId);
 }
 
 public class DatabaseService : IDatabaseService
@@ -54,6 +55,19 @@ public class DatabaseService : IDatabaseService
         using var connection = GetConnection();
 
         return connection.Query<ProductDto>(sql).ToList();
+    }
+
+    public List<ProductDto> GetProducts(int categoryId)
+    {
+        string sql = """
+            SELECT p.*, c.CategoryName, s.CompanyName AS SupplierName
+            FROM Products p Join Categories c ON p.CategoryId = c.CategoryId
+            JOIN Suppliers s ON p.SupplierId = s.SupplierId
+            WHERE p.CategoryId = @categoryId
+            """;
+        using var connection = GetConnection();
+
+        return connection.Query<ProductDto>(sql, new { categoryId }).ToList();
     }
 
     private SqlConnection GetConnection()

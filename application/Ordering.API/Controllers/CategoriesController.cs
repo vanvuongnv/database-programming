@@ -38,7 +38,8 @@ namespace Ordering.API.Controllers
         }
 
         [HttpGet]
-        [Route("get-products/{productId}")]
+        [Route("get-products/{productId}")] // /api/Categories/get-products/123 // Path String
+        [Route("get-product-by-id")] // /api/Categories/get-product-by-id/?productId=123 // Query String
         public IActionResult GetProducts(int productId)
         {
             var item = _databaseService.GetProductById(productId);
@@ -49,6 +50,15 @@ namespace Ordering.API.Controllers
             }    
 
             return Ok(item);
+        }
+
+        [HttpGet]
+        [Route("get-products-by-category")] // /api/Categories/get-products-by-category/?categoryId=123
+        public IActionResult GetProductsByCategory(int categoryId)
+        {
+            var items = _databaseService.GetProducts(categoryId);
+
+            return Ok(items);
         }
     }
 }
