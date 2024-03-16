@@ -16,6 +16,8 @@ public interface IDatabaseService
 
     int Update(int categoryId, CategoryRequestModel requestModel);
     CategoryDto? GetCategoryById(int categoryId);
+
+    int DeleteCategory(int categoryId);
 }
 
 public class DatabaseService : IDatabaseService
@@ -43,6 +45,23 @@ public class DatabaseService : IDatabaseService
             name = requestModel.CategoryName,
             description = requestModel.Description,
             pictureUrl = requestModel.PictureUrl
+        });
+
+        return result;
+    }
+
+    public int DeleteCategory(int categoryId)
+    {
+        string sql = """
+            DELETE Categories
+            WHERE CategoryId = @id
+            """;
+
+        using var connection = GetConnection();
+
+        var result = connection.Execute(sql, new
+        {
+            id = categoryId
         });
 
         return result;

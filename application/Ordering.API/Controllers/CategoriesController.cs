@@ -102,6 +102,37 @@ namespace Ordering.API.Controllers
 
             return BadRequest(ModelState);
         }
+
+        [HttpDelete]
+        [Route("delete-category/{id}")]
+        public IActionResult DeleteCategory(int id)
+        {
+            var category = _databaseService.GetCategoryById(id);
+
+            if (category is null)
+            {
+                return NotFound();
+            }
+
+            var products = _databaseService.GetProducts(id);
+
+            if (products != null && products.Count > 0)
+            {
+                ModelState.AddModelError("", $"This category has {products.Count} products");
+            }    
+
+            if (ModelState.IsValid)
+            {
+                var result = _databaseService.DeleteCategory(id);
+
+                if (result > 0)
+                {
+                    return Ok(new { msg = "delete successful" });
+                }
+            }
+
+            return BadRequest(ModelState);
+        }
     }
 }
 
