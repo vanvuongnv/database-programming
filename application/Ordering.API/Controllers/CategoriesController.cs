@@ -78,6 +78,23 @@ namespace Ordering.API.Controllers
 
             return BadRequest(ModelState);
         }
+
+        [HttpPut]
+        [Route("update-category/{id}")]
+        public IActionResult UpdateCategory(int id, [FromBody] CategoryRequestModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = _databaseService.Update(id, model);
+
+                if (result > 0)
+                {
+                    return Ok(new { msg = "update successful" });
+                }
+            }
+
+            return BadRequest(ModelState);
+        }
     }
 }
 

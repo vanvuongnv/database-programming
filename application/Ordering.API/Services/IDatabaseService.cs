@@ -13,6 +13,8 @@ public interface IDatabaseService
     List<ProductDto> GetProducts(int categoryId);
 
     int Add(CategoryRequestModel requestModel);
+
+    int Update(int categoryId, CategoryRequestModel requestModel);
 }
 
 public class DatabaseService : IDatabaseService
@@ -93,6 +95,30 @@ public class DatabaseService : IDatabaseService
         using var connection = GetConnection();
 
         return connection.Query<ProductDto>(sql, new { categoryId }).ToList();
+    }
+
+    public int Update(int categoryId, CategoryRequestModel requestModel)
+    {
+        string sql = """
+            UPDATE Categories
+            SET 
+                CategoryName = @name,
+                Description = @description,
+                PictureUrl = @pictureUrl
+            WHERE CategoryId = @id
+            """;
+
+        using var connection = GetConnection();
+
+        var result = connection.Execute(sql, new
+        {
+            name = requestModel.CategoryName,
+            description = requestModel.Description,
+            pictureUrl = requestModel.PictureUrl,
+            id = categoryId
+        });
+
+        return result;
     }
 
     private SqlConnection GetConnection()
