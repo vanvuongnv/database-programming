@@ -1,3 +1,5 @@
+using System.Net;
+using System.Numerics;
 using Dapper;
 using Microsoft.Data.SqlClient;
 using Ordering.API.Models.Dtos;
@@ -18,6 +20,10 @@ public interface IDatabaseService
     CategoryDto? GetCategoryById(int categoryId);
 
     int DeleteCategory(int categoryId);
+
+    int InsertCustomer(CustomerRequestModel customerRequest);
+    int InsertOrder(int customerId, OrderRequestModel orderRequest);
+    int InsertOrderDetail(int orderId, int productId, int quantity, decimal price);
 }
 
 public class DatabaseService : IDatabaseService
@@ -127,6 +133,71 @@ public class DatabaseService : IDatabaseService
         using var connection = GetConnection();
 
         return connection.Query<ProductDto>(sql, new { categoryId }).ToList();
+    }
+
+    public int InsertCustomer(CustomerRequestModel customerRequest)
+    {
+        string sql = """
+            INSERT INTO 
+                Customers(ContactTitle, ContactName, Address, Phone, Email, CompanyName, City)
+            VALUES 
+                (@ContactTitle, @ContactName, @Address, @Phone, @Email, @CompanyName, @City);
+
+            SELECT SCOPE_IDENTITY();
+            """;
+
+        using var connection = GetConnection();
+
+        return connection.ExecuteScalar<int>(sql, new
+        {
+            customerRequest.ContactName,
+            customerRequest.Address,
+            customerRequest.Phone,
+            customerRequest.Email,
+            customerRequest.CompanyName,
+            customerRequest.ContactTitle,
+            customerRequest.City
+        });
+    }
+
+    public int InsertOrder(int customerId, OrderRequestModel orderRequest)
+    {
+        string sql = """
+            INSERT INTO Orders(CustomerId,OrderDate,ShipAddress,ShipCity)
+            VALUES (@customerId, @orderDate, @ShipAddress, @ShipCity)
+
+            SELECT SCOPE_IDENTITY();
+            """;
+
+        using var connection = GetConnection();
+
+        return connection.ExecuteScalar<int>(sql, new
+        {
+            orderRequest.ShipAddress,
+            orderRequest.ShipCity,
+            customerId,
+            orderDate = DateTime.Now
+        });
+    }
+
+    public int InsertOrderDetail(int orderId, int productId, int quantity, decimal price)
+    {
+        string sql = """
+            INSERT INTO OrderDetails(OrderId,ProductId,Quantity,UnitPrice,DiscountPercentage)
+            VALUES (@orderId, @productId, @quantity, @price, 0)
+
+            SELECT SCOPE_IDENTITY();
+            """;
+
+        using var connection = GetConnection();
+
+        return connection.ExecuteScalar<int>(sql, new
+        {
+            orderId,
+            productId,
+            price,
+            quantity
+        });
     }
 
     public int Update(int categoryId, CategoryRequestModel requestModel)

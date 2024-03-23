@@ -133,6 +133,36 @@ namespace Ordering.API.Controllers
 
             return BadRequest(ModelState);
         }
+
+        [HttpPost]
+        [Route("create-order")]
+        public IActionResult CreateOrder([FromBody] CreateOrderRequestModel orderRequest)
+        {
+            if (ModelState.IsValid)
+            {
+                // insert customer
+                var customerId = _databaseService.InsertCustomer(orderRequest.Customer);
+                // insert order
+                var orderId = _databaseService.InsertOrder(customerId, orderRequest.Order);
+                // insert order detail
+                foreach(var product in orderRequest.Products)
+                {
+                    var productInDatabase = _databaseService.GetProductById(product.ProductId);
+
+                    if (productInDatabase != null)
+                    {
+                        _databaseService.InsertOrderDetail(orderId,
+                            product.ProductId,
+                            product.Quantity,
+                            productInDatabase.UnitPrice);
+                    }
+                }
+
+                return Ok(new { orderId = orderId });
+            }
+
+            return BadRequest();
+        }
     }
 }
 
