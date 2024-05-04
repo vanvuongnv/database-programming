@@ -2,13 +2,14 @@
   <div class="wrapper container">
     <h1>Hello VueJS</h1>
     <p>I'm a new member of Nuxt/Vue</p>
-    <button type="button" class="btn btn-primary" @click="showMessage()">
+    <button type="button" class="btn btn-primary mb-5" @click="showMessage()">
       Click Me
     </button>
+    <hr />
     <div class="row">
       <div class="col-12 col-md-4">
         <!--Form-->
-        <form>
+        <form @submit.prevent="addData()">
           <div class="form-group mb-3">
             <label for="id" class="control-label"> Id </label>
             <input v-model="dataSubmit.id" class="form-control" id="id" />
@@ -37,6 +38,7 @@
               </option>
             </select>
           </div>
+          <button type="submit" class="btn btn-outline-primary">Submit</button>
         </form>
       </div>
       <div class="col-12 col-md-8">
@@ -63,7 +65,8 @@
         </table>
       </div>
     </div>
-    <div>
+    <hr />
+    <div class="mt-5">
       <h3>Full Name:</h3>
       <input v-model="fullName" class="form-control" />
 
@@ -114,6 +117,19 @@ export default {
   methods: {
     showMessage() {
       alert('clicked')
+    },
+    addData() {
+      this.students.push({
+        id: this.dataSubmit.id,
+        studentName: this.dataSubmit.fullName,
+        gender: this.dataSubmit.gender,
+      })
+      // reset form
+      this.dataSubmit = {
+        id: null,
+        fullName: '',
+        gender: null,
+      }
     },
   },
 }
